@@ -1,0 +1,5 @@
+{
+  "name": "Latin Verb Synopsis Practice",
+  "description": "An interactive game to practice Latin verb conjugations. This version includes a standard matrix select mode, a fill-in-the-blank mode, and a comprehensive synopsis mode with customizable person and number.",
+  "requestFramePermissions": []
+}
