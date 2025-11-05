@@ -200,6 +200,7 @@
           <div class="checkbox-group"><label><input type="checkbox" name="filterMood" value="indicative" checked> Indicative</label></div>
           <div class="checkbox-group"><label><input type="checkbox" name="filterMood" value="subjunctive" checked> Subjunctive</label></div>
         </fieldset>
+  
         <fieldset>
           <legend>Tense</legend>
           <div class="checkbox-group"><label><input type="checkbox" name="filterTense" value="present" checked> Present</label></div>
@@ -209,17 +210,20 @@
           <div class="checkbox-group"><label><input type="checkbox" name="filterTense" value="pluperfect" checked> Pluperfect</label></div>
           <div class="checkbox-group"><label><input type="checkbox" name="filterTense" value="futureperfect" checked> Future Perfect</label></div>
         </fieldset>
+  
         <fieldset>
           <legend>Voice</legend>
           <div class="checkbox-group"><label><input type="checkbox" name="filterVoice" value="active" checked> Active</label></div>
           <div class="checkbox-group"><label><input type="checkbox" name="filterVoice" value="passive" checked> Passive</label></div>
         </fieldset>
+  
         <fieldset>
           <legend>Person</legend>
           <div class="checkbox-group"><label><input type="checkbox" name="filterPerson" value="1" checked> 1</label></div>
           <div class="checkbox-group"><label><input type="checkbox" name="filterPerson" value="2" checked> 2</label></div>
           <div class="checkbox-group"><label><input type="checkbox" name="filterPerson" value="3" checked> 3</label></div>
         </fieldset>
+  
         <fieldset>
           <legend>Number</legend>
           <div class="checkbox-group"><label><input type="checkbox" name="filterNumber" value="s" checked> Singular</label></div>
@@ -229,6 +233,7 @@
 
       <fieldset>
         <legend>Number of Rounds</legend>
+        <div class="radio-group"><label><input type="radio" name="roundCount" value="1"> 1</label></div>
         <div class="radio-group"><label><input type="radio" name="roundCount" value="5" checked> 5</label></div>
         <div class="radio-group"><label><input type="radio" name="roundCount" value="10"> 10</label></div>
         <div class="radio-group"><label><input type="radio" name="roundCount" value="15"> 15</label></div>
@@ -399,7 +404,7 @@
     function autoDetectConjugation(pp1, pp2) { let infinitive = removeDiacritics(pp2.toLowerCase().trim()); let part1 = removeDiacritics(pp1.toLowerCase().trim()); if (infinitive.endsWith("are")) return "1"; if (infinitive.endsWith("ere")) { if (part1.endsWith("eo")) return "2"; if (part1.endsWith("io")) return "3io"; return "3"; } if (infinitive.endsWith("ire")) return "4"; return "unknown"; }
     function dispatchConjugation(pp1, pp2, pp3, pp4, mood, tense, voice, person, number) { const conj = autoDetectConjugation(pp1, pp2); switch (conj) { case "1": return conjugateVerb1(pp1, pp2, pp3, pp4, mood, tense, voice, person, number); case "2": return conjugateVerb2(pp1, pp2, pp3, pp4, mood, tense, voice, person, number); case "3": return conjugateVerb3(pp1, pp2, pp3, pp4, mood, tense, voice, person, number); case "3io": return conjugateVerb3io(pp1, pp2, pp3, pp4, mood, tense, voice, person, number); case "4": return conjugateVerb4(pp1, pp2, pp3, pp4, mood, tense, voice, person, number); default: return "Unknown Conjugation"; } }
     function getImperative(pp1, pp2, number) { const conj = autoDetectConjugation(pp1, pp2); let stem = ""; let singular = ""; switch (conj) { case "1": stem = removeDiacritics(pp2).slice(0, -3); singular = stem + "a"; break; case "2": stem = removeDiacritics(pp2).slice(0, -2); singular = stem; break; case "3": stem = removeDiacritics(pp2).slice(0, -3); singular = stem + "e"; return (number === 's') ? singular : stem + "ite"; case "3io": stem = removeDiacritics(pp2).slice(0, -3); singular = stem + "e"; return (number === 's') ? singular : stem + "ite"; case "4": stem = removeDiacritics(pp2).slice(0, -3); singular = stem + "i"; break; default: return ""; } return (number === 's') ? singular : singular + "te"; }
-    function getInfinitive(pp1, pp2, pp3, pp4, formType) { const conj = autoDetectConjugation(pp1, pp2); const perfectStem = removeDiacritics(pp3).slice(0, -1); const ppp = removeDiacritics(pp4).replace(/um$/, 'us'); const fapStem = removeDiacritics(pp4).slice(0, -2); switch (formType) { case "presentActive": return removeDiacritics(pp2); case "presentPassive": switch (conj) { case "1": return removeDiacritics(pp2).slice(0, -1) + "i"; case "2": return removeDiacritics(pp2).slice(0, -1) + "i"; case "3": return removeDiacritics(pp2).slice(0, -3) + "i"; case "3io": return removeDiacritics(pp2).slice(0, -3) + "i"; case "4": return removeDiacritics(pp2).slice(0, -1) + "i"; } break; case "perfectActive": return perfectStem + "isse"; case "perfectPassive": return ppp + " esse"; case "futureActive": return fapStem + "urus esse"; } return ""; }
+    function getInfinitive(pp1, pp2, pp3, pp4, formType) { const conj = autoDetectConjugation(pp1, pp2); const perfectStem = removeDiacritics(pp3).slice(0, -1); const ppp = removeDiacritics(pp4).replace(/um$/, 'us'); const fapStem = removeDiacritics(pp4).slice(0, -2); switch (formType) { case "presentActive": return removeDiacritics(pp2); case "presentPassive": switch (conj) { case "1": return removeDiacritics(pp2).slice(0, -1) + "i"; case "2": return removeDiacritics(pp2).slice(0, -1) + "i"; case "3": return removeDiacritics(pp2).slice(0, -3) + "i"; case "3io": return removeDiacritics(pp2).slice(0, -3) + "i"; case "4": return removeDiacritics(pp2).slice(0, -1) + "i"; } break; case "perfectActive": return perfectStem + "isse"; case "perfectPassive": return removeDiacritics(pp4) + " esse"; case "futureActive": return fapStem + "urum esse"; } return ""; }
     function getParticiple(pp1, pp2, pp4, formType) { const conj = autoDetectConjugation(pp1, pp2); const presentStem = removeDiacritics(pp2).slice(0, -3); switch (formType) { case "pap": switch (conj) { case "1": return presentStem + "ans"; case "2": return removeDiacritics(pp2).slice(0, -2) + "ens"; case "3": return presentStem + "ens"; case "3io": return presentStem + "iens"; case "4": return presentStem + "iens"; } break; case "ppp": return removeDiacritics(pp4).replace(/um$/, 'us'); case "fap": return removeDiacritics(pp4).slice(0, -2) + "urus"; } return ""; }
     
     let totalRounds = 0, currentRound = 0, sessionCorrectCount = 0, currentAnswer = null, answerRevealed = false, sessionStartTime = null, timerInterval = null, sessionRecords = [];
@@ -556,7 +561,7 @@
     function showConfetti() { const confettiCanvas = document.getElementById("confettiCanvas"); confettiCanvas.classList.remove("hidden"); const ctx = confettiCanvas.getContext("2d"); confettiCanvas.width = window.innerWidth; confettiCanvas.height = window.innerHeight; let particles = []; for (let i = 0; i < 100; i++) { particles.push({ x: Math.random() * confettiCanvas.width, y: Math.random() * confettiCanvas.height - confettiCanvas.height, r: Math.random() * 6 + 2, d: Math.random() * 30 + 1, color: "hsl(" + Math.floor(Math.random() * 360) + ", 100%, 50%)" }); } function draw() { ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height); particles.forEach(p => { ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, true); ctx.closePath(); ctx.fill(); }); update(); } function update() { particles.forEach(p => { p.y += Math.cos(p.d) + 1 + p.r / 2; p.x += Math.sin(p.d); if (p.y > confettiCanvas.height) { p.y = 0; p.x = Math.random() * confettiCanvas.width; } }); } let confettiInterval = setInterval(draw, 20); setTimeout(() => { clearInterval(confettiInterval); confettiCanvas.classList.add("hidden"); }, 3000); }
     
     document.getElementById("startPracticeBtn").addEventListener("click", function() { gameMode = getSelectedRadioValue("gameMode"); const setupView = document.getElementById("setupView"); setupView.classList.add("fade-out"); setTimeout(() => { setupView.classList.add("hidden"); setupView.classList.remove("fade-out"); let targetViewId = (gameMode === 'synopsis') ? 'synopsisView' : 'practiceView'; const targetView = document.getElementById(targetViewId); targetView.classList.remove("hidden"); targetView.classList.add("fade-in"); initializeSession(); }, 500); });
-    document.querySelectorAll('input[name="gameMode"]').forEach(radio => { radio.addEventListener('change', function() { const filterOptions = document.getElementById('filterOptions'); const synopsisOptions = document.getElementById('synopsisOptions'); if (this.value === 'synopsis') { filterOptions.style.display = 'none'; synopsisOptions.classList.remove('hidden'); } else { filterOptions.style.display = 'block'; synopsisOptions.classList.add('hidden'); } }); });
+    document.querySelectorAll('input[name="gameMode"]').forEach(radio => { radio.addEventListener('change', function() { const filterOptions = document.getElementById('filterOptions'); const synopsisOptions = document.getElementById('synopsisOptions'); if (this.value === 'synopsis') { filterOptions.style.display = 'none'; synopsisOptions.classList.remove('hidden'); document.querySelector('input[name="roundCount"][value="1"]').checked = true; } else { filterOptions.style.display = 'block'; synopsisOptions.classList.add('hidden'); document.querySelector('input[name="roundCount"][value="5"]').checked = true; } }); });
     document.getElementById("checkAnswerBtn").addEventListener("click", checkAnswer);
     document.getElementById("checkSynopsisBtn").addEventListener("click", checkSynopsis);
     document.getElementById("restartBtn").addEventListener("click", function() { const finalView = document.getElementById("finalView"); finalView.classList.add("fade-out"); setTimeout(() => { finalView.classList.add("hidden"); finalView.classList.remove("fade-out"); const setupView = document.getElementById("setupView"); setupView.classList.remove("hidden"); setupView.classList.add("fade-in"); }, 500); });
